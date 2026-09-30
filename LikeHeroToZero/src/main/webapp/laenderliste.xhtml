@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Like Hero To Zero - L&#228;nder&#252;bersicht</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f7f5;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #047857;
+            margin: 0;
+        }
+        .login-button {
+            background-color: #047857;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-button:hover {
+            background-color: #059669;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th {
+            background-color: #047857;
+            color: white;
+            text-align: left;
+            padding: 12px;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #d1fae5;
+        }
+        .details-link {
+            color: #047857;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .details-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</h:head>
+<h:body>
+    <div class="container">
+        <div class="topbar">
+            <h1>CO2-Aussto&#223; nach L&#228;ndern</h1>
+            <h:outputLink value="login.xhtml" styleClass="login-button">Login f&#252;r Wissenschaftler:innen</h:outputLink>
+        </div>
+        <table>
+            <h:dataTable value="#{laenderListeBean.laender}" var="land">
+                <h:column>
+                    <f:facet name="header">Land</f:facet>
+                    #{land.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">ISO-Code</f:facet>
+                    #{land.isoCode}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Details</f:facet>
+                    <h:outputLink value="laenderdetail.xhtml" styleClass="details-link">
+                        <f:param name="id" value="#{land.id}"/>
+                        Details ansehen &#8594;
+                    </h:outputLink>
+                </h:column>
+            </h:dataTable>
+        </table>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>CO2-Daten pflegen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f7f5;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #047857;
+            margin-top: 0;
+            border-bottom: 3px solid #047857;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #047857;
+            margin-top: 40px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px;
+        }
+        .form-card {
+            background-color: #f7fbf9;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .form-row label {
+            width: 160px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            max-width: 300px;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .button-row {
+            margin-top: 20px;
+        }
+        .btn-primary {
+            background-color: #047857;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn-primary:hover {
+            background-color: #059669;
+        }
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background-color: #cfcfcf;
+        }
+        .success-message {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #d1fae5;
+            border-left: 4px solid #047857;
+            color: #047857;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th {
+            background-color: #047857;
+            color: white;
+            text-align: left;
+            padding: 12px;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #d1fae5;
+        }
+        .edit-link {
+            color: #047857;
+            font-weight: bold;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #047857;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</h:head>
+<h:body>
+    <div class="container">
+        <h1>CO2-Daten hinzuf&#252;gen oder korrigieren</h1>
+
+        <div class="form-card">
+            <h:form>
+                <div class="form-row">
+                    <h:outputLabel for="land" value="Land:"/>
+                    <h:selectOneMenu id="land" value="#{eintragBean.countryId}">
+                        <f:selectItems value="#{eintragBean.laender}" var="land" itemValue="#{land.id}" itemLabel="#{land.name}"/>
+                    </h:selectOneMenu>
+                </div>
+                <div class="form-row">
+                    <h:outputLabel for="jahr" value="Jahr:"/>
+                    <h:inputText id="jahr" value="#{eintragBean.jahr}"/>
+                </div>
+                <div class="form-row">
+                    <h:outputLabel for="wert" value="CO2-Wert (kt):"/>
+                    <h:inputText id="wert" value="#{eintragBean.wertKt}"/>
+                </div>
+                <div class="form-row">
+                    <h:outputLabel for="quelle" value="Quelle:"/>
+                    <h:inputText id="quelle" value="#{eintragBean.quelle}"/>
+                </div>
+                <div class="button-row">
+                    <h:commandButton value="Speichern" action="#{eintragBean.speichern}" styleClass="btn-primary"/>
+                    <h:commandButton value="Neu / Zur&#252;cksetzen" action="#{eintragBean.zuruecksetzen}" immediate="true" styleClass="btn-secondary"/>
+                </div>
+                <h:panelGroup rendered="#{eintragBean.erfolgsmeldung != null}">
+                    <div class="success-message">
+                        <h:outputText value="#{eintragBean.erfolgsmeldung}"/>
+                    </div>
+                </h:panelGroup>
+            </h:form>
+        </div>
+
+        <h2>Vorhandene Eintr&#228;ge</h2>
+        <table>
+            <h:form>
+                <h:dataTable value="#{eintragBean.eintraege}" var="e">
+                    <h:column>
+                        <f:facet name="header">Land</f:facet>
+                        #{e.country.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Jahr</f:facet>
+                        #{e.jahr}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Wert (kt)</f:facet>
+                        #{e.wertKt}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Quelle</f:facet>
+                        #{e.quelle}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Aktion</f:facet>
+                        <h:commandLink value="Bearbeiten" action="#{eintragBean.bearbeiten(e.id)}" styleClass="edit-link"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </table>
+
+        <h:outputLink value="../laenderliste.xhtml" styleClass="back-link">&#8592; Zur&#252;ck zur &#246;ffentlichen &#220;bersicht</h:outputLink>
+    </div>
+</h:body>
+</html>
